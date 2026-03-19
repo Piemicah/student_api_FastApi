@@ -23,3 +23,12 @@ class StudentCreate(BaseModel):
     state: Optional[str] = None
     lga: Optional[str] = None
     model_config = {"from_attributes": True}
+
+
+class StudentUpdate(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    dob: Optional[datetime] = None
+    state: Optional[str] = None
+    lga: Optional[str] = None
+    model_config = {"from_attributes": True}

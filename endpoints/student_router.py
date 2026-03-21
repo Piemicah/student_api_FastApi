@@ -20,9 +20,11 @@ def get_all_students(service: StudentService = Depends(get_student_service)):
     return service.get_all_students()
 
 
-@router.get("/{reg_no}", response_model=StudentDto)
-def get_students(reg_no: str, service: StudentService = Depends(get_student_service)):
-    return service.get_student(reg_no)
+@router.get("/{reg_no}", response_model=dict)
+def get_student_detail(
+    reg_no: str, service: StudentService = Depends(get_student_service)
+):
+    return service.get_student_detail(reg_no)
 
 
 @router.post("/", response_model=StudentDto)

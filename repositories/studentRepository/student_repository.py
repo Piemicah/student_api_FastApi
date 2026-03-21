@@ -2,7 +2,8 @@ from typing import override
 from sqlalchemy.orm import Session
 
 from dtos.student_dto import StudentCreate, StudentDto, StudentUpdate
-from models.models import Student
+from mappers.student_mapper import student_to_dto
+from models.models import Enrollment, Programme, Student
 from repositories.studentRepository.istudent_repository import IStudentRepository
 
 
@@ -12,13 +13,29 @@ class StudentRepository(IStudentRepository):
 
     @override
     def get_all_students(self) -> list[StudentDto]:
+
         result = self.session.query(Student).all()
-        return result
+        return [StudentDto.model_validate(model) for model in result]
 
     @override
     def get_student(self, reg_no: str) -> StudentDto:
         student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
-        return student
+        return StudentDto.model_validate(student)
+
+    def get_student_detail(self, reg_no):
+        student = self.get_student(reg_no)
+
+        result = (
+            self.session.query(Programme.programme_name)
+            .join(Enrollment, Enrollment.programme_id == Programme.id)
+            .join(Student, Student.id == Enrollment.student_id)
+            .all()
+        )
+
+        return {
+            "bio": student.model_dump(),
+            "programmes": [row.programme_name for row in result],
+        }
 
     @override
     def create_student(self, data: StudentCreate) -> StudentDto:

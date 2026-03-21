@@ -13,6 +13,9 @@ class StudentService:
     def get_student(self, reg_no: str) -> StudentDto:
         return self.repository.get_student(reg_no)
 
+    def get_student_detail(self, reg_no: str) -> dict:
+        return self.repository.get_student_detail(reg_no)
+
     def create_student(self, data: StudentCreate) -> StudentDto:
         return self.repository.create_student(data)
 

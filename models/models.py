@@ -2,7 +2,6 @@ from sqlalchemy import (
     Column,
     Computed,
     DateTime,
-    Float,
     Integer,
     Numeric,
     String,
@@ -50,7 +49,7 @@ class Enrollment(Base):
 class Payment(Base):
 
     __tablename__ = "payments"
-    id1 = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     student_id = Column(ForeignKey("students.id"))
     programme_id = Column(ForeignKey("programmes.id"))
     pay1 = Column(Numeric(8, 2), default=0.0)

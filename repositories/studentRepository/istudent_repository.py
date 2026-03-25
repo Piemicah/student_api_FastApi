@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
-from dtos.student_dto import StudentCreate, StudentDto, StudentUpdate
+from dtos.student_dto import StudentCreate, StudentResponse, StudentUpdate
 from models.models import Student
 
 
 class IStudentRepository(ABC):
     @abstractmethod
-    def get_all_students(self) -> list[StudentDto]:
+    def get_all_students(self) -> list[dict]:
         """Fetches all students from the database
 
         Returns:
@@ -15,7 +15,7 @@ class IStudentRepository(ABC):
         pass
 
     @abstractmethod
-    def get_student(self, reg_no: str) -> StudentDto | dict:
+    def get_student(self, reg_no: str) -> dict:
         """Fetch a single student record
 
         Args:
@@ -35,7 +35,7 @@ class IStudentRepository(ABC):
         pass
 
     @abstractmethod
-    def update_student(self, reg_no: str, data: StudentUpdate) -> StudentDto:
+    def update_student(self, reg_no: str, data: StudentUpdate) -> StudentResponse:
         pass
 
     @abstractmethod

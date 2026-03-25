@@ -1,7 +1,7 @@
 from typing import override
 from sqlalchemy.orm import Session
 
-from dtos.student_dto import StudentCreate, StudentDto, StudentUpdate
+from dtos.student_dto import StudentCreate, StudentResponse, StudentUpdate
 from mappers.student_mapper import student_to_dto
 from models.models import Enrollment, Programme, Student
 from repositories.studentRepository.istudent_repository import IStudentRepository
@@ -12,15 +12,15 @@ class StudentRepository(IStudentRepository):
         self.session = session
 
     @override
-    def get_all_students(self) -> list[StudentDto]:
+    def get_all_students(self) -> list[dict]:
 
         result = self.session.query(Student).all()
-        return [StudentDto.model_validate(model) for model in result]
+        return [student_to_dto(model) for model in result]
 
     @override
-    def get_student(self, reg_no: str) -> StudentDto:
+    def get_student(self, reg_no: str) -> dict:
         student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
-        return StudentDto.model_validate(student)
+        return student_to_dto(student)
 
     def get_student_detail(self, reg_no):
         student = self.get_student(reg_no)
@@ -38,7 +38,7 @@ class StudentRepository(IStudentRepository):
         }
 
     @override
-    def create_student(self, data: StudentCreate) -> StudentDto:
+    def create_student(self, data: StudentCreate) -> StudentResponse:
         student = Student(
             reg_no=data.reg_no,
             name=data.name,
@@ -52,7 +52,7 @@ class StudentRepository(IStudentRepository):
         return student
 
     @override
-    def update_student(self, reg_no: str, data: StudentUpdate) -> StudentDto | dict:
+    def update_student(self, reg_no: str, data: StudentUpdate) -> StudentResponse | dict:
         student = self.get_student(reg_no)
 
         if not student:

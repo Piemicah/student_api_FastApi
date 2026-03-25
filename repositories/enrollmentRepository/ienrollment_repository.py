@@ -1,13 +1,13 @@
 from abc import abstractmethod, ABC
 
-from dtos.enrollment_dto import EnrollmentCreate, EnrollmentDto
+from dtos.enrollment_dto import EnrollmentCreate, EnrollmentResponse
 from models.models import Enrollment
 
 
 class IEnrollmentRepository(ABC):
 
     @abstractmethod
-    def get_all_enrollments(self) -> list[EnrollmentDto]:
+    def get_all_enrollments(self) -> list[EnrollmentResponse]:
         """Fetches all enrollments
 
         Returns:
@@ -16,5 +16,5 @@ class IEnrollmentRepository(ABC):
         pass
 
     @abstractmethod
-    def create_enrollment(self, data: EnrollmentCreate) -> Enrollment:
+    def create_enrollment(self, data: EnrollmentCreate) -> dict:
         pass

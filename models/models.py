@@ -22,8 +22,8 @@ class Student(Base):
     dob = Column(DateTime, nullable=True)
     state = Column(String, nullable=True)
     lga = Column(String, nullable=True)
-    enrollments = relationship("Enrollment")
-    payments = relationship("Payment")
+    enrollments = relationship("Enrollment",back_populates="student",cascade="all, delete")
+    payments = relationship("Payment",back_populates="student",cascade="all, delete")
 
 
 class Programme(Base):
@@ -31,8 +31,8 @@ class Programme(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=False)
     programme_name = Column(String)
-    enrollments = relationship("Enrollment")
-    payments = relationship("Payment")
+    enrollments = relationship("Enrollment",back_populates="programme",cascade="all, delete")
+    payments = relationship("Payment",back_populates="programme",cascade="all, delete")
 
 
 class Enrollment(Base):
@@ -44,6 +44,8 @@ class Enrollment(Base):
     subject1 = Column(String)
     subject2 = Column(String)
     subject3 = Column(String)
+    student = relationship("Student",back_populates="enrollments")
+    programme = relationship("Programme",back_populates="enrollments")
 
 
 class Payment(Base):
@@ -56,3 +58,5 @@ class Payment(Base):
     pay2 = Column(Numeric(8, 2), default=0.0)
     pay3 = Column(Numeric(8, 2), default=0.0)
     balance = Column(Numeric(8, 2), Computed("300000-(pay1+pay2+pay3)"))
+    student = relationship("Student",back_populates="payments")
+    programme = relationship("Programme",back_populates="payments")

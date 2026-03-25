@@ -3,8 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from dtos.enrollment_dto import EnrollmentResponse
 
-class StudentDto(BaseModel):
+
+class StudentResponse(BaseModel):
     id: int
     reg_no: str
     name: str
@@ -12,6 +14,7 @@ class StudentDto(BaseModel):
     dob: Optional[datetime] = None
     state: Optional[str] = None
     lga: Optional[str] = None
+    enrollments: list[EnrollmentResponse]=[]
     model_config = {"from_attributes": True}
 
 
@@ -22,7 +25,6 @@ class StudentCreate(BaseModel):
     dob: Optional[datetime] = None
     state: Optional[str] = None
     lga: Optional[str] = None
-    model_config = {"from_attributes": True}
 
 
 class StudentUpdate(BaseModel):
@@ -31,4 +33,3 @@ class StudentUpdate(BaseModel):
     dob: Optional[datetime] = None
     state: Optional[str] = None
     lga: Optional[str] = None
-    model_config = {"from_attributes": True}

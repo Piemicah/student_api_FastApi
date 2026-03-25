@@ -22,20 +22,6 @@ class StudentRepository(IStudentRepository):
         student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
         return student_to_dto(student)
 
-    def get_student_detail(self, reg_no):
-        student = self.get_student(reg_no)
-
-        result = (
-            self.session.query(Programme.programme_name)
-            .join(Enrollment, Enrollment.programme_id == Programme.id)
-            .join(Student, Student.id == Enrollment.student_id)
-            .all()
-        )
-
-        return {
-            "bio": student.model_dump(),
-            "programmes": [row.programme_name for row in result],
-        }
 
     @override
     def create_student(self, data: StudentCreate) -> StudentResponse:

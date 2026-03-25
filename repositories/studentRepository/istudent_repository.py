@@ -22,14 +22,11 @@ class IStudentRepository(ABC):
             reg_no (str): Student registration number
 
         Returns:
-            StudentDto | dict: returns student record if exist or a dictionary of message
+            dict: returns student record
         """
         pass
 
-    @abstractmethod
-    def get_student_detail(self, reg_no: str) -> dict:
-        pass
-
+    
     @abstractmethod
     def create_student(self, data: Student):
         pass

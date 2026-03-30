@@ -60,3 +60,22 @@ class Payment(Base):
     balance = Column(Numeric(8, 2), Computed("300000-(pay1+pay2+pay3)"))
     student = relationship("Student",back_populates="payments")
     programme = relationship("Programme",back_populates="payments")
+
+
+# User authentication and authorization with RBAC
+class Role(Base):
+    __tablename__ = "roles"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)  # admin, staff, student
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, index=True)
+    password = Column(String)
+    role_id = Column(Integer, ForeignKey("roles.id"))
+
+    role = relationship("Role")

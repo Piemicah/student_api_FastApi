@@ -1,2 +1,25 @@
 GET http://127.0.0.1:8000/students/
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJycGllbWljYWgiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzQ4ODkwMjR9.yUBzarVVLr9a9L0upndGjCc4cFaUDa4eR_Ae9g0tLuY
+
+###
+
+POST http://127.0.0.1:8000/users
+Content-Type: application/json
+
+{
+    "username":"morire",
+    "password":"123456",
+    "role_id":2
+}
+
+###
+
+POST http://127.0.0.1:8000/auth/login-json/
+Content-Type: application/json
+
+{
+    "username":"piemicah",
+    "password":"goodpie222"
+}
+ 
 

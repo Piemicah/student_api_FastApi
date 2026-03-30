@@ -28,11 +28,19 @@ class IStudentRepository(ABC):
 
     
     @abstractmethod
-    def create_student(self, data: Student):
+    def create_student(self, data: Student)->StudentResponse:
+        """Add a student to the database
+
+        Args:
+            data (Student): student database model
+
+        Returns:
+            StudentResponse: a student dto of the student created
+        """
         pass
 
     @abstractmethod
-    def update_student(self, reg_no: str, data: StudentUpdate) -> StudentResponse:
+    def update_student(self, reg_no: str, data: StudentUpdate) -> dict:
         pass
 
     @abstractmethod

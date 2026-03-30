@@ -35,11 +35,11 @@ class StudentRepository(IStudentRepository):
         )
         self.session.add(student)
         self.session.commit()
-        return student
+        return StudentResponse.model_validate(student)
 
     @override
     def update_student(self, reg_no: str, data: StudentUpdate) -> StudentResponse | dict:
-        student = self.get_student(reg_no)
+        student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
 
         if not student:
             return {
@@ -52,7 +52,7 @@ class StudentRepository(IStudentRepository):
         return student
 
     def delete_student(self, reg_no: str) -> dict:
-        student = self.get_student(reg_no)
+        student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
 
         if not student:
             return {

@@ -1,38 +1,40 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from data.database import get_session
 from models.models import User
-from auth.security import SECRET_KEY, ALGORITHM
+from util.config import ALGORITHM, SECRET_KEY
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    request: Request,
     db: Session = Depends(get_session),
 ):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid credentials",
-    )
+    token = request.cookies.get("access_token")
+
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
 
-        if username is None:
-            raise credentials_exception
+        if payload.get("type") != "access":
+            raise HTTPException(status_code=401)
+
+        username = payload.get("sub")
 
     except JWTError:
-        raise credentials_exception
+        raise HTTPException(status_code=401)
 
     user = db.query(User).filter(User.username == username).first()
 
-    if user is None:
-        raise credentials_exception
+    if not user:
+        raise HTTPException(status_code=401)
 
     return user
 
@@ -41,7 +43,7 @@ def require_roles(*roles: list[str]):
         if user.role.name not in roles:
             raise HTTPException(
                 status_code=403,
-                detail="Not enough permissions",
+                detail="Forbiden",
             )
         return user
 

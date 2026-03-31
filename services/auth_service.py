@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from dtos.auth_dto import UserLogin
 from models.models import User
-from auth.security import verify_password, create_access_token
+from auth.security import create_refresh_token, verify_password, create_access_token
 
 
 class AuthService:
@@ -22,11 +22,12 @@ class AuthService:
         if not user:
             return None
 
-        token = create_access_token(
-            {
+        payload = {
                 "sub": user.username,
-                "role": user.role.name,
-            }
-        )
+                "role": user.role.name
+                }
 
-        return {"access_token": token, "role": user.role.name}
+        access_token = create_access_token(payload)
+        refresh_token = create_refresh_token(payload)
+
+        return access_token, refresh_token

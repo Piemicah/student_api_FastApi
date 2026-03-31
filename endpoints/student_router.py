@@ -16,7 +16,7 @@ def get_student_service(db: Session = Depends(get_session)):
 router = APIRouter(prefix="/students", tags=["Students"])
 
 
-@router.get("/", response_model=list[dict])
+@router.get("/", response_model=list[StudentResponse])
 def get_all_students(
     service: StudentService = Depends(get_student_service),
     user=Depends(require_roles("admin","staff"))

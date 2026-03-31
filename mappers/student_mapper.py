@@ -16,28 +16,15 @@ def student_to_model(dto: StudentResponse) -> Student:
 
 
 def student_to_dto(model: Student) -> StudentResponse:
-    student= StudentResponse(
+    return StudentResponse(
         id=model.id,
         reg_no=model.reg_no,
         name=model.name,
         phone=model.phone,
         dob=model.dob,
         state=model.state,
-        lga=model.lga,
-        enrollments=model.enrollments
+        lga=model.lga
     )
 
-    session = get_sessionLocal()
-    student_dict = student.model_dump()
-    enrollments = student_dict["enrollments"]
-    if len(enrollments)>0:
-        for enroll in enrollments:
-            programme_name = session.query(Programme).filter(Programme.id==enroll["programme_id"]).first().programme_name
-            enroll.pop("programme_id")
-            enroll["Programme"]=programme_name
-
-    student_dict["enrollments"]=enrollments
-    session.close()
-    return student_dict
 
 

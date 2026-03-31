@@ -14,7 +14,6 @@ class StudentResponse(BaseModel):
     dob: Optional[datetime] = None
     state: Optional[str] = None
     lga: Optional[str] = None
-    enrollments: list[EnrollmentResponse]=[]
     model_config = {"from_attributes": True}
 
 

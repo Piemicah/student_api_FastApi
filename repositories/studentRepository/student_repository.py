@@ -12,15 +12,27 @@ class StudentRepository(IStudentRepository):
         self.session = session
 
     @override
-    def get_all_students(self) -> list[dict]:
+    def get_all_students(self):
 
         result = self.session.query(Student).all()
-        return [student_to_dto(model) for model in result]
+        return [StudentResponse.model_validate(model) for model in result]
 
     @override
     def get_student(self, reg_no: str) -> dict:
         student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
-        return student_to_dto(student)
+        student_dict = StudentResponse.model_validate(student).model_dump()
+        
+        programes=    {
+                enrol.programme.programme_name:
+                {
+                    "subject1":enrol.subject1,
+                    "subject2":enrol.subject2,
+                    "subject3":enrol.subject3
+                }
+              for enrol in student.enrollments
+              }
+        
+        return {**{"Bio":student_dict},**{"Programmes":programes}}
 
 
     @override

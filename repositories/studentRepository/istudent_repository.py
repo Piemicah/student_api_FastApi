@@ -6,11 +6,11 @@ from models.models import Student
 
 class IStudentRepository(ABC):
     @abstractmethod
-    def get_all_students(self) -> list[dict]:
+    def get_all_students(self) -> list[StudentResponse]:
         """Fetches all students from the database
 
         Returns:
-            list[StudentDto]: list of studentDto
+            list[StudentDto]: list of StudentResponse
         """
         pass
 

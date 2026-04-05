@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 
+from auth.dependencies import get_current_user
 from auth.security import create_access_token
 from data.database import get_session
 from dtos.auth_dto import UserLogin
@@ -24,14 +26,15 @@ def login_json(data: UserLogin, db: Session = Depends(get_session)):
 
     access_token, refresh_token = result
 
-    response = Response(content="Login successful")
+    response = JSONResponse(content="Login successful")
 
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
         secure=False,  # True in production (HTTPS)
-        samesite="lax",
+        samesite="strict",
+        path="/"   # 🔥 ADD THIS
     )
 
     response.set_cookie(
@@ -39,7 +42,8 @@ def login_json(data: UserLogin, db: Session = Depends(get_session)):
         value=refresh_token,
         httponly=True,
         secure=False,
-        samesite="lax",
+        samesite="strict",
+        path="/"   # 🔥 ADD THIS
     )
 
     return response
@@ -60,14 +64,15 @@ def login_oauth2(
 
     access_token, refresh_token = result
 
-    response = Response(content="Login successful")
+    response = JSONResponse(content="Login successful")
 
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
         secure=False,  # True in production (HTTPS)
-        samesite="lax",
+        samesite="strict",
+        path="/"   # 🔥 ADD THIS
     )
 
     response.set_cookie(
@@ -75,7 +80,8 @@ def login_oauth2(
         value=refresh_token,
         httponly=True,
         secure=False,
-        samesite="lax",
+        samesite="strict",
+        path="/"   # 🔥 ADD THIS
     )
 
     return response
@@ -99,14 +105,14 @@ def refresh_token(request: Request):
             "role": payload["role"]
         })
 
-        response = Response(content="Token refreshed")
+        response = JSONResponse(content="Token refreshed")
 
         response.set_cookie(
             key="access_token",
             value=new_access_token,
             httponly=True,
             secure=False,
-            samesite="lax",
+            samesite="strict"
         )
 
         return response
@@ -117,9 +123,18 @@ def refresh_token(request: Request):
 
 @router.post("/logout")
 def logout():
-    response = Response(content="Logged out")
+    response = JSONResponse(content="Logged out")
 
-    response.delete_cookie("access_token")
-    response.delete_cookie("refresh_token")
+    response.delete_cookie("access_token",path='/')
+    response.delete_cookie("refresh_token",path='/')
 
     return response
+
+@router.get("/me")
+def get_current_user_info(
+    user=Depends(get_current_user)
+):
+    return {
+        "username": user.username,
+        "role": user.role.name
+    }

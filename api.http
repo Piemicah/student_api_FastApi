@@ -1,5 +1,5 @@
 GET http://127.0.0.1:8000/students/
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJycGllbWljYWgiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzQ4ODkwMjR9.yUBzarVVLr9a9L0upndGjCc4cFaUDa4eR_Ae9g0tLuY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwaWVtaWNhaCIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc3NDk5MjQ5Nn0.OCtUX5UR3AYBNYGnFesIqKgn8qDSn2f1PEGIlaHssIY
 
 ###
 

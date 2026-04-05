@@ -35,8 +35,7 @@ def get_student(
 @router.post("/", response_model=StudentResponse)
 def create_student(
     data: StudentCreate, 
-    service: StudentService = Depends(get_student_service),
-    user=Depends(require_roles("admin"))
+    service: StudentService = Depends(get_student_service)
 ):
     return service.create_student(data)
 

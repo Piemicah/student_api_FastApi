@@ -8,8 +8,6 @@ from models.models import User
 from util.config import ALGORITHM, SECRET_KEY
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
 
 def get_current_user(
     request: Request,

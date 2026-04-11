@@ -21,19 +21,37 @@ class StudentRepository(IStudentRepository):
     def get_student(self, reg_no: str) -> dict:
         student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
         student_dict = StudentResponse.model_validate(student).model_dump()
-        
-        programes=    {
-                enrol.programme.programme_name:
-                {
-                    "subject1":enrol.subject1,
-                    "subject2":enrol.subject2,
-                    "subject3":enrol.subject3
-                }
-              for enrol in student.enrollments
-              }
-        
-        return {**{"Bio":student_dict},**{"Programmes":programes}}
 
+        programes = [
+            {
+                "programmeName": enrol.programme.programme_name,
+                "subjects": {
+                    "subject1": enrol.subject1,
+                    "subject2": enrol.subject2,
+                    "subject3": enrol.subject3,
+                },
+            }
+            for enrol in student.enrollments
+        ]
+
+        payments = [
+            {
+                "programmeName": enrol.programme.programme_name,
+                "payments": {
+                    "pay1": enrol.pay1,
+                    "pay2": enrol.pay2,
+                    "pay3": enrol.pay3,
+                    "balance": enrol.balance,
+                },
+            }
+            for enrol in student.payments
+        ]
+
+        return {
+            **{"Bio": student_dict},
+            **{"Programmes": programes},
+            **{"Payments": payments},
+        }
 
     @override
     def create_student(self, data: StudentCreate) -> StudentResponse:
@@ -50,7 +68,9 @@ class StudentRepository(IStudentRepository):
         return StudentResponse.model_validate(student)
 
     @override
-    def update_student(self, reg_no: str, data: StudentUpdate) -> StudentResponse | dict:
+    def update_student(
+        self, reg_no: str, data: StudentUpdate
+    ) -> StudentResponse | dict:
         student = self.session.query(Student).filter(Student.reg_no == reg_no).first()
 
         if not student:

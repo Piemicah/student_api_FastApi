@@ -3,8 +3,8 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class PaymentDto(BaseModel):
-    id1: int
+class PaymentResponse(BaseModel):
+    id: int
     student_id: int
     programme_id: int
     pay1: float
@@ -20,7 +20,6 @@ class PaymentCreate(BaseModel):
     pay1: float
     pay2: Optional[float] = 0.0
     pay3: Optional[float] = 0.0
-    model_config = {"from_attributes": True}
 
 
 class PaymentUpdate(BaseModel):
@@ -29,4 +28,3 @@ class PaymentUpdate(BaseModel):
     pay1: Optional[float] = None
     pay2: Optional[float] = None
     pay3: Optional[float] = None
-    model_config = {"from_attributes": True}

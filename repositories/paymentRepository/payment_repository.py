@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from dtos.payment_dto import PaymentCreate, PaymentDto
+from dtos.payment_dto import PaymentCreate, PaymentResponse
 from models.models import Payment
 
 from .ipayment_repository import IPaymentRepository
@@ -21,4 +21,4 @@ class PaymentRepository(IPaymentRepository):
 
         self.session.add(payment)
         self.session.commit()
-        return payment
+        return PaymentResponse.model_validate(payment)
